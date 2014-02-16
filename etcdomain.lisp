@@ -8,9 +8,12 @@
                                :fill-pointer 0
                                :adjustable t))
 
+(defun get-tld-data-path ()
+  (asdf:system-relative-pathname 'cl-etcdomain "tld.dat"))
+
 (defun load-tld-data ()
   "加载TLD数据，数据来源：http://mxr.mozilla.org/mozilla/source/netwerk/dns/src/effective_tld_names.dat?raw=1"
-  (with-open-file (stream "tld.dat")
+  (with-open-file (stream (get-tld-data-path))
     (loop for line = (read-line stream nil)
       while line
       when (and
@@ -43,7 +46,7 @@
   (let ((result (loop for item
               in (reverse (string-split-by-dot domain))
               when (in-tld-data-p item)
-            collect item)))
+                collect item)))
     (reverse result)))
 
 (defun get-tld (domain)
@@ -54,7 +57,7 @@
   (let* ((tld-items (get-tld-items domain))
      (domain-items (string-split-by-dot domain)))
     (subseq domain-items (1- (- (length domain-items)
-                 (length tld-items))))))
+                                (length tld-items))))))
 
 (defun get-sld (domain)
   (items->string (get-sld-itmes domain)))
