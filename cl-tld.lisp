@@ -31,19 +31,18 @@
 (defun get-tld-data (item)
   (find item *tld-data* :test #'equal))
 
+(defun join-domain (domain-item-list)
+  (format nil "~{~A~^.~}" domain-item-list))
+
 (defun get-tld (domain)
   (if (not (position #\. domain))
       nil)
   (let ((items (string-split domain #\.)))
     (dotimes (i (length items))
-      (let* ((domain-item (format nil
-                                 "~{~A~^.~}"
-                                 (subseq items i)))
+      (let* ((domain-item (join-domain (subseq items i)))
              (tld domain-item)
              (tld-* (concatenate 'string "*." domain-item))
              (tld-! (concatenate 'string "!" domain-item)))
         (cond ((get-tld-data tld) (return domain-item))
               ((get-tld-data tld-!) (return domain-item))
-              ((get-tld-data tld-*) (return domain)))))))
-
-
+              ((get-tld-data tld-*) (return (join-domain (subseq items (- i 1))))))))))
