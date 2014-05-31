@@ -1,4 +1,4 @@
-;;;; author: lu4nx <lux@knownsec.com>
+;;;; author: lu4nx <lx@shellcodes.org>
 ;;;; date: 2014-02-15
 ;;;; parsing TLD from publicsuffix.org
 
