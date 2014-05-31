@@ -1,9 +1,11 @@
-提取顶级域名和二级域名
+cl-tld
+====
+获取域名TLD，from https://publicsuffix.org/
 
-### 示例：
 
-    (get-sld "lx.shellcodes.org")
-    "shellcodes.org"
+示例：
+=====
 
-    (get-tld "lx.shellcodes.org")
+    CL-USER> (cl-tld:get-tld "www.shellcodes.org")
     "org"
+

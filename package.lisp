@@ -1,5 +1,3 @@
-(defpackage :cl-etcdomain
-  (:nicknames :etcdomain)
+(defpackage :cl-tld
   (:use :cl)
-  (:export :get-tld
-           :get-sld))
+  (:export :get-tld :test-get-tld))
