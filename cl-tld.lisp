@@ -44,5 +44,5 @@
              (tld-* (concatenate 'string "*." domain-item))
              (tld-! (concatenate 'string "!" domain-item)))
         (cond ((get-tld-data tld) (return domain-item))
-              ((get-tld-data tld-!) (return (first (last items))))
+              ((get-tld-data tld-!) (return (join-domain (rest (subseq items i)))))
               ((get-tld-data tld-*) (return (join-domain (subseq items (- i 1))))))))))
