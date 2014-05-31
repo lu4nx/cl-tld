@@ -1,11 +1,13 @@
 cl-tld
 ====
-获取域名TLD，from https://publicsuffix.org/
+Extracts the TLD(Top Level Domain) from domain.TLD info from https://publicsuffix.org
 
 
-示例：
+Usage：
 =====
 
+    CL-USER> (ql:quickload "cl-tld")
+    ("cl-tld")
     CL-USER> (cl-tld:get-tld "www.shellcodes.org")
     "org"
 

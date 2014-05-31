@@ -34,7 +34,7 @@
 (defun get-tld (domain)
   (if (not (position #\. domain))
       nil)
-  (let* ((items (string-split domain #\.)))
+  (let ((items (string-split domain #\.)))
     (dotimes (i (length items))
       (let* ((domain-item (format nil
                                  "~{~A~^.~}"
@@ -46,9 +46,4 @@
               ((get-tld-data tld-!) (return domain-item))
               ((get-tld-data tld-*) (return domain)))))))
 
-(defun test-get-tld ()
-  (assert (string= (get-tld "www.lx.com") "com"))
-  (assert (string= (get-tld "www.lx.mm") "www.lx.mm"))
-  (assert (string= (get-tld "www.teledata.mz") "teledata.mz"))
-  (assert (string= (get-tld "xx.www.ck") "www.ck"))
-  (assert (string= (get-tld "city.kitakyushu.jp") "city.kitakyushu.jp")))
+
