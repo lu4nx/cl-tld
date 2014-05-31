@@ -1,6 +1,6 @@
 ;;;; author: lu4nx <lux@knownsec.com>
 ;;;; date: 2014-02-15
-;;;; parsering TLD from publicsuffix.org
+;;;; parsing TLD from publicsuffix.org
 
 (in-package :cl-tld)
 
