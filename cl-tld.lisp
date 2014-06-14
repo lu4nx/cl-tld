@@ -8,14 +8,14 @@
 (defvar *tld-data-path* (asdf:system-relative-pathname 'cl-tld "effective_tld_names.dat"))
 
 (defun load-data ()
-  (let ((tld-data (make-array 0 :fill-pointer 0 :adjustable t)))
+  (let ((tld-data (make-hash-table :test #'equal)))
     (with-open-file (stream *tld-data-path*)
       (loop for line = (read-line stream nil)
             while line
             when (and
                   (string/= line "")
                   (string/= line "//" :end1 2))
-              do (vector-push-extend line tld-data)))
+              do (setf (gethash line tld-data) line)))
     tld-data))
 
 (setf *tld-data* (load-data))
@@ -29,7 +29,7 @@
         while n))
 
 (defun get-tld-data (item)
-  (find item *tld-data* :test #'equal))
+  (gethash item *tld-data*))
 
 (defun join-domain (domain-item-list)
   (format nil "~{~A~^.~}" domain-item-list))
