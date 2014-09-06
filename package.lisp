@@ -1,3 +1,3 @@
 (defpackage :cl-tld
   (:use :cl)
-  (:export :get-tld :test-get-tld))
+  (:export :get-tld :get-domain-suffix :test-cl-tld))

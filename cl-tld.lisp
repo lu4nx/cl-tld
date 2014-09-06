@@ -12,9 +12,8 @@
     (with-open-file (stream *tld-data-path*)
       (loop for line = (read-line stream nil)
             while line
-            when (and
-                  (string/= line "")
-                  (string/= line "//" :end1 2))
+            when (and (string/= line "")
+                      (string/= line "//" :end1 2))
               do (setf (gethash line tld-data) line)))
     tld-data))
 
@@ -34,15 +33,34 @@
 (defun join-domain (domain-item-list)
   (format nil "~{~A~^.~}" domain-item-list))
 
+(defun get-domain-tld (domain-item-list)
+  (dotimes (i (length domain-item-list))
+    (let* ((domain-item (join-domain (subseq domain-item-list i)))
+           (tld domain-item)
+           (tld-* (concatenate 'string "*." domain-item))
+           (tld-! (concatenate 'string "!" domain-item)))
+      (cond ((get-tld-data tld) (return domain-item))
+            ((get-tld-data tld-!) (return (join-domain (rest (subseq domain-item-list i)))))
+            ((get-tld-data tld-*) (return (join-domain (subseq domain-item-list (- i 1)))))))))
+
+(defun is-domain-p (domain)
+  (position #\. domain))
+
 (defun get-tld (domain)
-  (if (not (position #\. domain))
-      nil)
-  (let ((items (string-split domain #\.)))
-    (dotimes (i (length items))
-      (let* ((domain-item (join-domain (subseq items i)))
-             (tld domain-item)
-             (tld-* (concatenate 'string "*." domain-item))
-             (tld-! (concatenate 'string "!" domain-item)))
-        (cond ((get-tld-data tld) (return domain-item))
-              ((get-tld-data tld-!) (return (join-domain (rest (subseq items i)))))
-              ((get-tld-data tld-*) (return (join-domain (subseq items (- i 1))))))))))
+  (if (not (is-domain-p domain))
+      (error "not is a domain")
+      (get-domain-tld (string-split domain #\.))))
+
+(defun get-domain-suffix (domain)
+  (if (not (is-domain-p domain))
+      (error "not is a domain")
+      (let* ((domain-item-list (string-split domain #\.))
+             (domain-tld (get-domain-tld domain-item-list))
+             (dot-count (count #\. domain-tld)))
+        (concatenate 'string
+                     (nth (- (length domain-item-list)
+                             (1+ dot-count)
+                             1)
+                          domain-item-list)
+                     "."
+                     domain-tld))))
