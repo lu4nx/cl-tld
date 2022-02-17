@@ -10,4 +10,6 @@
 
   (assert (string= (get-domain-suffix "xx.www.ck") "www.ck"))
   (assert (string= (get-domain-suffix "www.lx.mm") "www.lx.mm"))
-  (assert (string= (get-domain-suffix "city.kitakyushu.jp") "city.kitakyushu.jp")))
+  (assert (string= (get-domain-suffix "city.kitakyushu.jp") "city.kitakyushu.jp"))
+  (add-domain-name "localhost")
+  (assert (string= (get-tld "lx.localhost") "localhost")))

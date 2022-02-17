@@ -4,20 +4,21 @@
 
 (in-package :cl-tld)
 
-(defvar *tld-data* nil)
+(defvar *tld-data* (make-hash-table :test #'equal))
 (defvar *tld-data-path* (asdf:system-relative-pathname 'cl-tld "effective_tld_names.dat"))
 
-(defun load-data ()
-  (let ((tld-data (make-hash-table :test #'equal)))
-    (with-open-file (stream *tld-data-path*)
-      (loop for line = (read-line stream nil)
-            while line
-            when (and (string/= line "")
-                      (string/= line "//" :end1 2))
-              do (setf (gethash line tld-data) line)))
-    tld-data))
+(defun add-domain-name (domain-name)
+  (setf (gethash domain-name *tld-data*) domain-name))
 
-(setf *tld-data* (load-data))
+(defun load-data ()
+  (with-open-file (stream *tld-data-path*)
+    (loop for line = (read-line stream nil)
+          while line
+          when (and (string/= line "")
+                    (string/= line "//" :end1 2))
+            do (add-domain-name line))))
+
+(load-data)
 
 (defun string-split (string delimiter)
   (loop for i = 0 then (1+ n)
