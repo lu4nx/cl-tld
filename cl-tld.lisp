@@ -57,22 +57,24 @@
   (position #\. domain))
 
 (defun get-tld (domain)
-  (if (not (is-domain-p domain))
-      (error "not is a domain")
+  (if (string= "" domain)
+      (error (format nil "\"~a\" is not a TLD." domain))
       (get-domain-tld (string-split domain #\.))))
 
 (defun get-domain-suffix (domain)
   (if (not (is-domain-p domain))
-      (error "not is a domain")
+      (error (format nil "\"~a\" is not a domain." domain))
       (let ((domain-item-list (string-split domain #\.)))
         (multiple-value-bind (domain-tld type) (get-domain-tld domain-item-list)
-          (let ((dot-count (count #\. domain-tld)))
-            (values
-             (concatenate 'string
-                          (nth (- (length domain-item-list)
-                                  (1+ dot-count)
-                                  1)
-                               domain-item-list)
-                          "."
-                          domain-tld)
-             type))))))
+          (if (string= domain-tld domain)
+              (error (format nil "\"~a\" is private TLD, not a registerable domain." domain))
+              (let ((dot-count (count #\. domain-tld)))
+                (values
+                 (concatenate 'string
+                              (nth (- (length domain-item-list)
+                                      (1+ dot-count)
+                                      1)
+                                   domain-item-list)
+                              "."
+                              domain-tld)
+                 type)))))))
