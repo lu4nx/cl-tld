@@ -57,7 +57,8 @@
   (position #\. domain))
 
 (defun get-tld (domain)
-  (if (string= "" domain)
+  (if (or (null domain)
+          (string= "" domain))
       (error (format nil "\"~a\" is not a TLD." domain))
       (get-domain-tld (string-split domain #\.))))
 
